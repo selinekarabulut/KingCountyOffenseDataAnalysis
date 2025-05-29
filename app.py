@@ -6,6 +6,9 @@ import requests
 from io import BytesIO
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 # -------------------------------------
 # Load and clean crime data
@@ -32,7 +35,7 @@ shapefile_dir = "shapefiles"
 # Download and extract if not already
 if not os.path.exists(shapefile_dir):
     os.makedirs(shapefile_dir, exist_ok=True)
-    r = requests.get(shapefile_url)
+    r = requests.get(shapefile_url, verify=False)
     z = zipfile.ZipFile(BytesIO(r.content))
     z.extractall(shapefile_dir)
 
