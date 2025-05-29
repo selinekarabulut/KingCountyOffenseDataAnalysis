@@ -1,5 +1,9 @@
 import pandas as pd
 import geopandas as gpd
+import os
+import zipfile
+import requests
+from io import BytesIO
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output
 
@@ -21,8 +25,19 @@ df["hour"] = df["incident_datetime"].dt.hour
 # -------------------------------------
 # Load ZIP shapefile and filter to relevant ZIPs
 # -------------------------------------
-shapefile_path = "cb_2020_us_zcta520_500k.shp"  # <- Change to your local path
-zip_geo = gpd.read_file(shapefile_path)
+
+shapefile_url = "https://www2.census.gov/geo/tiger/GENZ2020/shp/cb_2020_us_zcta520_500k.zip"
+shapefile_dir = "shapefiles"
+
+# Download and extract if not already
+if not os.path.exists(shapefile_dir):
+    os.makedirs(shapefile_dir, exist_ok=True)
+    r = requests.get(shapefile_url)
+    z = zipfile.ZipFile(BytesIO(r.content))
+    z.extractall(shapefile_dir)
+
+# Load shapefile
+zip_geo = gpd.read_file(os.path.join(shapefile_dir, "cb_2020_us_zcta520_500k.shp"))
 zip_geo["zip"] = zip_geo["ZCTA5CE20"]
 zip_geo = zip_geo[zip_geo["zip"].isin(df["zip"].unique())]
 
