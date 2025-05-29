@@ -3,3 +3,8 @@ pandas
 geopandas
 plotly
 gunicorn
+requests
+shapely
+fiona
+pyproj
+rtree
