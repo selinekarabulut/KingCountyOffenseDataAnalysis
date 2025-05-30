@@ -14,7 +14,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Load and clean crime data
 # -------------------------------------
 url = "https://data.kingcounty.gov/api/views/4kmt-kfqf/rows.csv?accessType=DOWNLOAD"
-df = pd.read_csv(url, low_memory=False)
+from datetime import datetime
+
+df = pd.read_csv(url, low_memory=False, parse_dates=["incident_datetime"])
+df = df[df["incident_datetime"] >= datetime(2020, 1, 1)]
 df["incident_datetime"] = pd.to_datetime(df["incident_datetime"], errors="coerce")
 
 # Filter out anything before a reasonable threshold (e.g., Jan 2020)
