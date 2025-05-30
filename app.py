@@ -168,5 +168,5 @@ def update_hourly_trend(selected_crime):
 
 
 if __name__ == "__main__":
-   app.run_server(debug=True, host="0.0.0.0", port=8080)
+   app.run(debug=True, host="0.0.0.0", port=8080)
 
