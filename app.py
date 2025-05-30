@@ -3,12 +3,11 @@ import geopandas as gpd
 import os
 import zipfile
 import requests
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from io import BytesIO
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 
 # -------------------------------------
 # Load and clean crime data
@@ -16,7 +15,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 url = "https://data.kingcounty.gov/api/views/4kmt-kfqf/rows.csv?accessType=DOWNLOAD"
 df = pd.read_csv(url, low_memory=False)
 df["incident_datetime"] = pd.to_datetime(df["incident_datetime"], errors="coerce")
-df = df[df["incident_datetime"] >= pd.Timestamp("2020-01-01")]
 
 # Filter out anything before a reasonable threshold (e.g., Jan 2020)
 df = df[df["incident_datetime"] >= pd.Timestamp("2020-01-01")]
@@ -31,7 +29,7 @@ df["hour"] = df["incident_datetime"].dt.hour
 # -------------------------------------
 
 shapefile_url = "https://www2.census.gov/geo/tiger/GENZ2020/shp/cb_2020_us_zcta520_500k.zip"
-shapefile_dir = "shapefiles"
+shapefile_dir = "/Users/selin/Desktop/ArcGis"
 
 # Download and extract if not already
 if not os.path.exists(shapefile_dir):
@@ -169,5 +167,4 @@ def update_hourly_trend(selected_crime):
 
 
 if __name__ == "__main__":
-   app.run(debug=True, host="0.0.0.0", port=8080)
-
+    app.run(debug=True, port=8051)
