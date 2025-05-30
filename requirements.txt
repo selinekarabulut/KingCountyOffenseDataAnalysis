@@ -3,10 +3,5 @@ dash
 pandas
 geopandas
 plotly
-gunicorn
 requests
 urllib3
-shapely
-fiona
-pyproj
-rtree
